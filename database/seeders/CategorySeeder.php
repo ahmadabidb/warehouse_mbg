@@ -1,0 +1,1 @@
+<?php namespace Database\Seeders; use App\Models\Category; use Illuminate\Database\Seeder; class CategorySeeder extends Seeder {public function run():void{foreach(['Karbohidrat','Protein Hewani','Protein Nabati','Sayuran','Buah','Bumbu'] as $n)Category::firstOrCreate(['nama_kategori'=>$n]);}}

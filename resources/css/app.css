@@ -1,0 +1,2 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+body{font-family:Inter,system-ui,sans-serif;color:#263238}.sidebar{width:260px;min-height:100vh;background:#12352a}.sidebar .nav-link{color:#d7e5df;border-radius:.4rem;padding:.65rem .75rem}.sidebar .nav-link:hover{background:#236146;color:#fff}.menu-label{font-size:.7rem;letter-spacing:.1em;color:#94b8a7;margin-top:1rem;padding:.5rem .75rem}.pagination{--bs-pagination-color:#236146;--bs-pagination-active-bg:#236146;--bs-pagination-active-border-color:#236146}
