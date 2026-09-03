@@ -10,8 +10,33 @@ Route::get('/dashboard', DashboardController::class)->middleware(['auth','permis
 Route::middleware('auth')->group(function () {
     Route::resource('categories',CategoryController::class)->except('show');
     Route::resource('bahan-bakus',BahanBakuController::class)->except('show');
-    Route::get('stok-masuk',[StockController::class,'incomingIndex'])->middleware('permission:stok_masuk.create')->name('stok-masuk.index'); Route::get('stok-masuk/create',[StockController::class,'incomingCreate'])->middleware('permission:stok_masuk.create')->name('stok-masuk.create');Route::post('stok-masuk',[StockController::class,'incomingStore'])->middleware('permission:stok_masuk.create')->name('stok-masuk.store');
-    Route::get('stok-keluar',[StockController::class,'outgoingIndex'])->middleware('permission:stok_keluar.create')->name('stok-keluar.index'); Route::get('stok-keluar/create',[StockController::class,'outgoingCreate'])->middleware('permission:stok_keluar.create')->name('stok-keluar.create');Route::post('stok-keluar',[StockController::class,'outgoingStore'])->middleware('permission:stok_keluar.create')->name('stok-keluar.store');
+    // ─── Stok Masuk ─────────────────────────────────────────────
+    Route::get('stok-masuk', [StockController::class, 'incomingIndex'])
+        ->middleware('permission:stok_masuk.create')->name('stok-masuk.index');
+    Route::get('stok-masuk/create', [StockController::class, 'incomingCreate'])
+        ->middleware('permission:stok_masuk.create')->name('stok-masuk.create');
+    Route::post('stok-masuk', [StockController::class, 'incomingStore'])
+        ->middleware('permission:stok_masuk.create')->name('stok-masuk.store');
+    Route::get('stok-masuk/{stokMasuk}/edit', [StockController::class, 'incomingEdit'])
+        ->middleware('permission:stok_masuk.manage')->name('stok-masuk.edit');
+    Route::put('stok-masuk/{stokMasuk}', [StockController::class, 'incomingUpdate'])
+        ->middleware('permission:stok_masuk.manage')->name('stok-masuk.update');
+    Route::delete('stok-masuk/{stokMasuk}', [StockController::class, 'incomingDestroy'])
+        ->middleware('permission:stok_masuk.manage')->name('stok-masuk.destroy');
+
+    // ─── Stok Keluar ────────────────────────────────────────────
+    Route::get('stok-keluar', [StockController::class, 'outgoingIndex'])
+        ->middleware('permission:stok_keluar.create')->name('stok-keluar.index');
+    Route::get('stok-keluar/create', [StockController::class, 'outgoingCreate'])
+        ->middleware('permission:stok_keluar.create')->name('stok-keluar.create');
+    Route::post('stok-keluar', [StockController::class, 'outgoingStore'])
+        ->middleware('permission:stok_keluar.create')->name('stok-keluar.store');
+    Route::get('stok-keluar/{stokKeluar}/edit', [StockController::class, 'outgoingEdit'])
+        ->middleware('permission:stok_keluar.manage')->name('stok-keluar.edit');
+    Route::put('stok-keluar/{stokKeluar}', [StockController::class, 'outgoingUpdate'])
+        ->middleware('permission:stok_keluar.manage')->name('stok-keluar.update');
+    Route::delete('stok-keluar/{stokKeluar}', [StockController::class, 'outgoingDestroy'])
+        ->middleware('permission:stok_keluar.manage')->name('stok-keluar.destroy');
     Route::get('stok-monitoring',[StockController::class,'monitoring'])->middleware('permission:stok.view')->name('stok.monitoring');
     Route::get('reports/incoming',[ReportController::class,'incoming'])->middleware('permission:laporan.view')->name('reports.incoming');Route::get('reports/outgoing',[ReportController::class,'outgoing'])->middleware('permission:laporan.view')->name('reports.outgoing');Route::get('reports/opname',[ReportController::class,'opname'])->middleware('permission:laporan.view')->name('reports.opname');Route::get('reports/{type}/export/{format}',[ReportController::class,'export'])->middleware('permission:laporan.export')->whereIn('type',['incoming','outgoing','opname'])->whereIn('format',['pdf','excel'])->name('reports.export');
     Route::resource('users',UserController::class)->except('show');

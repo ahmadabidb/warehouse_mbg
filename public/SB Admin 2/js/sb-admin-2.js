@@ -10,14 +10,30 @@
     };
   });
 
-  // Close any open menu accordions when window is resized below 768px
+  // Remember the last known window width so we only react to real width
+  // changes that cross a breakpoint. On mobile, hiding/showing the browser's
+  // URL bar while scrolling fires a `resize` event with the SAME width; without
+  // this guard that would reset the sidebar's open state and make it appear to
+  // "auto-close" on scroll.
+  var lastWindowWidth = $(window).width();
+
+  // Collapse open menu accordions / sync the sidebar on genuine responsive
+  // breakpoint changes (resize window, rotate device) — WITHOUT forcing the
+  // sidebar closed while the user simply scrolls on a mobile device.
   $(window).resize(function() {
-    if ($(window).width() < 768) {
+    var currentWidth = $(window).width();
+    if (Math.abs(currentWidth - lastWindowWidth) < 1) {
+      return; // no real width change (e.g. mobile URL bar show/hide) -> do nothing
+    }
+    lastWindowWidth = currentWidth;
+
+    // Close any open menu accordions when window is resized below 768px
+    if (currentWidth < 768) {
       $('.sidebar .collapse').collapse('hide');
     };
-    
+
     // Toggle the side navigation when window is resized below 480px
-    if ($(window).width() < 480 && !$(".sidebar").hasClass("toggled")) {
+    if (currentWidth < 480 && !$(".sidebar").hasClass("toggled")) {
       $("body").addClass("sidebar-toggled");
       $(".sidebar").addClass("toggled");
       $('.sidebar .collapse').collapse('hide');

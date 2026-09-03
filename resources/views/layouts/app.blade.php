@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Dashboard' }} | SIM-STOK MBG GENENGAN</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-bgn.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="{{ asset('SB Admin 2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ asset('SB Admin 2/css/sb-admin-2.min.css') }}" rel="stylesheet">

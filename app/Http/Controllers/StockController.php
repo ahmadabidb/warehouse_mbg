@@ -26,8 +26,9 @@ class StockController extends Controller
     public function incomingCreate()
     {
         return view('stocks.form', [
-            'type'  => 'incoming',
-            'items' => BahanBaku::orderBy('nama_bahan')->get(),
+            'type'   => 'incoming',
+            'record' => new StokMasuk,
+            'items'  => BahanBaku::orderBy('nama_bahan')->get(),
         ]);
     }
 
@@ -38,6 +39,34 @@ class StockController extends Controller
 
         return to_route('stok-masuk.index')
             ->with('success', 'Stok masuk berhasil dicatat.');
+    }
+
+    /** Menampilkan form edit stok masuk. */
+    public function incomingEdit(StokMasuk $stokMasuk)
+    {
+        return view('stocks.form', [
+            'type'   => 'incoming',
+            'record' => $stokMasuk,
+            'items'  => BahanBaku::orderBy('nama_bahan')->get(),
+        ]);
+    }
+
+    /** Memperbarui transaksi stok masuk melalui Service. */
+    public function incomingUpdate(StockRequest $request, StokMasuk $stokMasuk, StockTransactionService $service)
+    {
+        $service->updateIncoming($stokMasuk, $request->validated(), $request->user()->id);
+
+        return to_route('stok-masuk.index')
+            ->with('success', 'Stok masuk berhasil diperbarui.');
+    }
+
+    /** Menghapus transaksi stok masuk melalui Service. */
+    public function incomingDestroy(StokMasuk $stokMasuk, StockTransactionService $service)
+    {
+        $service->deleteIncoming($stokMasuk);
+
+        return to_route('stok-masuk.index')
+            ->with('success', 'Stok masuk berhasil dihapus.');
     }
 
     // ─── Stok Keluar ───────────────────────────────────────────────────
@@ -57,8 +86,9 @@ class StockController extends Controller
     public function outgoingCreate()
     {
         return view('stocks.form', [
-            'type'  => 'outgoing',
-            'items' => BahanBaku::orderBy('nama_bahan')->get(),
+            'type'   => 'outgoing',
+            'record' => new StokKeluar,
+            'items'  => BahanBaku::orderBy('nama_bahan')->get(),
         ]);
     }
 
@@ -69,6 +99,34 @@ class StockController extends Controller
 
         return to_route('stok-keluar.index')
             ->with('success', 'Stok keluar berhasil dicatat.');
+    }
+
+    /** Menampilkan form edit stok keluar. */
+    public function outgoingEdit(StokKeluar $stokKeluar)
+    {
+        return view('stocks.form', [
+            'type'   => 'outgoing',
+            'record' => $stokKeluar,
+            'items'  => BahanBaku::orderBy('nama_bahan')->get(),
+        ]);
+    }
+
+    /** Memperbarui transaksi stok keluar melalui Service. */
+    public function outgoingUpdate(StockRequest $request, StokKeluar $stokKeluar, StockTransactionService $service)
+    {
+        $service->updateOutgoing($stokKeluar, $request->validated(), $request->user()->id);
+
+        return to_route('stok-keluar.index')
+            ->with('success', 'Stok keluar berhasil diperbarui.');
+    }
+
+    /** Menghapus transaksi stok keluar melalui Service. */
+    public function outgoingDestroy(StokKeluar $stokKeluar, StockTransactionService $service)
+    {
+        $service->deleteOutgoing($stokKeluar);
+
+        return to_route('stok-keluar.index')
+            ->with('success', 'Stok keluar berhasil dihapus.');
     }
 
     // ─── Monitoring ────────────────────────────────────────────────────

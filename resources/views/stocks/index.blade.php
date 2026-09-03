@@ -23,6 +23,7 @@
                     <th>Bahan</th>
                     <th>Jumlah</th>
                     <th>Petugas</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,10 +36,35 @@
                         <td>{{ $r->bahanBaku->nama_bahan }}</td>
                         <td>{{ $r->jumlah }} {{ $r->bahanBaku->satuan }}</td>
                         <td>{{ $r->user->name }}</td>
+                        <td>
+                            @php
+                                $isIncoming = $type === 'incoming';
+                                $editRoute  = $isIncoming ? 'stok-masuk.edit' : 'stok-keluar.edit';
+                                $destroyRoute = $isIncoming ? 'stok-masuk.destroy' : 'stok-keluar.destroy';
+                            @endphp
+                            @can($isIncoming ? 'stok_masuk.manage' : 'stok_keluar.manage')
+                                <a
+                                    class="btn btn-sm btn-outline-primary"
+                                    href="{{ route($editRoute, $r) }}"
+                                >
+                                    Edit
+                                </a>
+                                <form
+                                    class="d-inline"
+                                    method="POST"
+                                    action="{{ route($destroyRoute, $r) }}"
+                                    onsubmit="return confirm('Yakin ingin menghapus transaksi {{ $isIncoming ? 'stok masuk' : 'stok keluar' }} ini? Stok bahan baku akan dikoreksi otomatis.');"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger">Hapus</button>
+                                </form>
+                            @endcan
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">Belum ada transaksi.</td>
+                        <td colspan="6" class="text-center">Belum ada transaksi.</td>
                     </tr>
                 @endforelse
             </tbody>

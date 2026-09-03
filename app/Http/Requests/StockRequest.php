@@ -7,15 +7,20 @@ use Illuminate\Foundation\Http\FormRequest;
 class StockRequest extends FormRequest
 {
     /**
-     * Otorisasi berdasarkan jenis transaksi (masuk atau keluar).
+     * Otorisasi berdasarkan jenis transaksi (masuk atau keluar) dan
+     * metode HTTP (create/store vs edit/update/destroy).
      */
     public function authorize(): bool
     {
-        $permission = $this->is('stok-masuk*')
-            ? 'stok_masuk.create'
-            : 'stok_keluar.create';
+        $isIncoming = $this->is('stok-masuk*');
 
-        return $this->user()->can($permission);
+        // Operasi tulis-perubahan (update) memerlukan izin kelola
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            return $this->user()->can($isIncoming ? 'stok_masuk.manage' : 'stok_keluar.manage');
+        }
+
+        // Create/store tetap menggunakan izin yang sudah ada
+        return $this->user()->can($isIncoming ? 'stok_masuk.create' : 'stok_keluar.create');
     }
 
     /**
